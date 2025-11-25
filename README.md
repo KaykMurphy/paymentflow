@@ -450,12 +450,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-## 📞 Contato
-
-- GitHub: [@KaykMurphy](https://github.com/KaykMurphy)
-
----
-
 <div align="center">
   
 ⭐ Se este projeto te ajudou, considere dar uma estrela!
