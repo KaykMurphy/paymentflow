@@ -12,9 +12,15 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    record ErrorResponse(
+            Instant timestamp,
+            int status,
+            String error,
+            String message
+    ) {}
+
     @ExceptionHandler(ResourceNotFoundException.class)
-
-
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(
                 Instant.now(),
@@ -50,9 +56,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
+            ex.getBindingResult().getFieldErrors().forEach(error ->
+                    errors.put(error.getField(), error.getDefaultMessage())
+            );
 
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", Instant.now());
@@ -74,11 +80,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
-    record ErrorResponse(
-            Instant timestamp,
-            int status,
-            String error,
-            String message
-    ) {}
+
 }
 
