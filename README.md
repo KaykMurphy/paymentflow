@@ -5,6 +5,7 @@
 [![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4+-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
 [![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)](https://hibernate.org/)
 
@@ -37,6 +38,10 @@ API RESTful para gerenciamento de fluxo de pagamentos, permitindo:
 ### Banco de Dados
 - **PostgreSQL** - Banco de dados relacional
 - **H2 Database** - Banco em memória para testes
+
+### DevOps
+- **Docker** - Containerização
+- **Docker Compose** - Orquestração de containers
 
 ### Ferramentas
 - **Maven** - Gerenciamento de dependências
@@ -100,19 +105,79 @@ src/main/java/com/example/paymentflow/
 
 ### Pré-requisitos
 
+#### Opção 1: Executar com Docker (Recomendado) 🐳
+- Docker
+- Docker Compose
+
+#### Opção 2: Executar Localmente
 - Java 17 ou superior
 - Maven 3.8+
 - PostgreSQL 12+
 - Postman ou Insomnia (para testes)
 
-### 1. Clone o repositório
+---
+
+### 🐳 Executar com Docker (Recomendado)
+
+A forma mais simples e rápida de executar o projeto é usando Docker Compose, que configura automaticamente o banco de dados PostgreSQL e a aplicação.
+
+#### 1. Clone o repositório
 
 ```bash
 git clone https://github.com/seu-usuario/payment-flow-api.git
 cd payment-flow-api
 ```
 
-### 2. Configure o banco de dados
+#### 2. Execute com Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+Isso irá:
+- ✅ Criar um container PostgreSQL configurado
+- ✅ Construir e executar a aplicação Spring Boot
+- ✅ Configurar automaticamente a rede entre os containers
+- ✅ Expor a API na porta 8080
+
+#### 3. Acesse a aplicação
+
+A API estará disponível em: `http://localhost:8080`
+
+#### Comandos úteis do Docker
+
+```bash
+# Ver logs da aplicação
+docker-compose logs -f app
+
+# Ver logs do banco de dados
+docker-compose logs -f db
+
+# Parar os containers
+docker-compose down
+
+# Parar e remover volumes (limpa o banco de dados)
+docker-compose down -v
+
+# Reconstruir as imagens
+docker-compose up --build
+
+# Verificar status dos containers
+docker-compose ps
+```
+
+---
+
+### 💻 Executar Localmente (Sem Docker)
+
+#### 1. Clone o repositório
+
+```bash
+git clone https://github.com/seu-usuario/payment-flow-api.git
+cd payment-flow-api
+```
+
+#### 2. Configure o banco de dados
 
 Crie um banco no PostgreSQL:
 
@@ -131,7 +196,7 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 ```
 
-### 3. Execute a aplicação
+#### 3. Execute a aplicação
 
 ```bash
 mvn spring-boot:run
@@ -379,6 +444,52 @@ Acesse: `http://localhost:8080/h2-console`
 ### Collection do Postman
 
 Importe a collection disponível em: `docs/postman_collection.json`
+
+---
+
+## 📦 Build e Deploy
+
+### Build Local
+
+Gerar o JAR do projeto:
+
+```bash
+mvn clean package
+```
+
+O arquivo será gerado em `target/payment-flow-api.jar`
+
+### Build com Docker
+
+Construir a imagem Docker:
+
+```bash
+docker build -t payment-flow-api:latest .
+```
+
+### Deploy
+
+#### Deploy Local
+
+Execute o JAR gerado:
+
+```bash
+java -jar target/payment-flow-api.jar
+```
+
+#### Deploy com Docker
+
+Execute o container:
+
+```bash
+docker run -p 8080:8080 payment-flow-api:latest
+```
+
+#### Deploy Completo com Docker Compose
+
+```bash
+docker-compose up -d
+```
 
 ---
 
