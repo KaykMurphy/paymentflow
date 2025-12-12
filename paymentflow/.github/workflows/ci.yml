@@ -1,14 +1,33 @@
 name: Integração Contínua (CI)
 
+
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 jobs:
   build-and-test:
+    name: Build e Testes Unitários
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: payment_db_test
+          POSTGRES_USER: user_test
+          POSTGRES_PASSWORD: password_test
+        ports:
+          - 5432:5432
+
+        # Healthcheck: Garante que o banco está pronto antes do Java começar
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout do código
@@ -19,10 +38,15 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'maven'
+          cache: 'maven' # Isso faz o build ser mais rápido nas próximas vezes
 
       - name: Compilar e Testar com Maven
-        run: mvn clean package
+        run: ./mvnw clean verify
+        env:
+
+          DB_URL: jdbc:postgresql://localhost:5432/payment_db_test
+          DB_USERNAME: user_test
+          DB_PASSWORD: password_test
 
       - name: Testar construção da imagem Docker
-        run: docker build . --file Dockerfile --tag meu-app:teste
+        run: docker build . --file Dockerfile --tag payment-api:ci-test
